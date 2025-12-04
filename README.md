@@ -9,6 +9,10 @@ A Next.js 14 application that uses a **Hybrid OCR approach** combining AWS Textr
   - **AWS Textract** detects table structure and identifies holes, par values, and player names
   - **OpenAI Vision (GPT-4o)** fills gaps in handwritten scores with high accuracy
   - Handles various scorecard formats from different golf courses
+- 🎯 **Dual Score Notation Support**: Automatically detects and converts between:
+  - **Gross strokes** (e.g., "4", "5", "6") - absolute stroke count
+  - **Relative to par** (e.g., "+1", "-1", "E") - score compared to par
+  - Normalizes everything to gross strokes internally for consistency
 - ✏️ **Editable Results**: Review and correct extracted data in an intuitive table
 - 📊 **Automatic Calculations**: Real-time statistics (out/in/total scores)
 - 💬 **AI Assistant**: Chat with Amazon Bedrock (Claude) for personalized insights and tips
@@ -46,6 +50,30 @@ The system intelligently handles various golf scorecard layouts:
   - Searches up to 8 rows from hole numbers to accommodate different layouts
 - **Player Rows** - Automatically identifies player names and their scores
 
+**Dual Score Notation Support:**
+
+Players may write scores in two different ways on scorecards:
+
+1. **Gross Strokes Notation** (Traditional):
+   - Actual number of strokes: "4", "5", "6", "3", "7"
+   - Most common format
+
+2. **Relative-to-Par Notation** (Competitive):
+   - Score compared to par: "+1", "-1", "E", "+2", "-2"
+   - "E" or "0" means even par (score equals par)
+   - "+1" means 1 over par (par 4 + 1 = 5 strokes)
+   - "-1" means 1 under par (par 4 - 1 = 3 strokes)
+
+**Auto-Detection & Normalization:**
+- System automatically detects which notation style is used per cell
+- Converts all relative-to-par scores to gross strokes internally
+- Handles mixed notation (some players use strokes, others use relative)
+- Example conversions:
+  - Par 4, score "+1" → 5 gross strokes
+  - Par 4, score "E" → 4 gross strokes  
+  - Par 5, score "-1" → 4 gross strokes
+  - Par 3, score "+2" → 5 gross strokes
+
 **Smart Par Detection:**
 - Checks row before hole numbers (some courses have par first)
 - Checks up to 8 rows after hole numbers (handles tee yardages like Black/Blue/White/Gold)
@@ -67,7 +95,7 @@ Row 3: Blue (tee yardages)
 Row 4: White (tee yardages)
 Row 5: Gold (tee yardages)
 Row 6: Men's Par | 4 | 4 | 3 | ... | 5 | 36 | 72
-Row 7+: Player rows with handwritten scores
+Row 7+: Player rows with handwritten scores (either gross or relative notation)
 ```
 
 ## Architecture
@@ -150,7 +178,8 @@ lib/
 ├── openaiVision.ts       # OpenAI Vision for handwriting (gap filling)
 ├── cleanupOcr.ts         # Post-processing and validation
 ├── bedrockClient.ts      # Amazon Bedrock client
-└── playerTotals.ts       # Golf scoring calculations (Out/In/Total)
+├── scoreNotation.ts      # Score notation detection & conversion (NEW)
+└── golfScoring.ts        # Golf scoring calculations (Out/In/Total)
 
 app/
 ├── api/
@@ -170,16 +199,22 @@ components/
 
 **Textract (`lib/textractOcr.ts`)**:
 - Table structure extraction from AWS Textract API
-- Hole number detection (finds sequential 1-9 or 1-18)
+- **Production-ready fallback logic**:
+  1. Searches first 5 rows for hole numbers (standard case)
+  2. If not found, uses par row as anchor (handles obstructions, crops)
+  3. Infers hole structure from par values (3, 4, 5)
 - Par row detection with flexible search (checks 8 rows, supports "Men's Par")
 - Player name extraction from row labels
-- Score extraction from table cells
+- Score extraction from table cells with notation detection
+- Converts relative-to-par notation (+1, -1, E) to gross strokes
 - Returns structured scorecard with possible null scores
 
 **OpenAI Vision (`lib/openaiVision.ts`)**:
 - Handwriting recognition using GPT-4o high-detail mode
 - Gap filling only (doesn't replace Textract scores)
 - Uses 18-hole or 9-hole templates
+- Instructed to convert relative-to-par notation to gross strokes
+- Double-checks notation conversion with parseScoreToGross
 - Structured JSON output with player scores
 
 **Hybrid Orchestrator (`lib/hybridOcr.ts`)**:
@@ -195,8 +230,16 @@ components/
 - Validates hole sequences
 - Final data sanitization
 
-**Player Totals (`lib/playerTotals.ts`)**:
+**Score Notation (`lib/scoreNotation.ts`)**:
+- Detects relative-to-par notation (+1, -1, E, 0)
+- Converts relative scores to gross strokes
+- Handles mixed notation per player or per cell
+- Validates score ranges (1-20 strokes)
+
+**Golf Scoring (`lib/golfScoring.ts`)**:
 - Calculates Out (holes 1-9), In (holes 10-18), Total scores
+- Computes relation to par (birdie, eagle, bogey, etc.)
+- Derives player statistics (birdies, pars, bogeys)
 - Handles missing scores gracefully
 
 ## Local Development
@@ -391,7 +434,8 @@ Your Amplify app needs permissions to access Secrets Manager and Bedrock.
 
 ## Production Notes
 
-- **Par Detection**: System automatically detects par row with flexible search (up to 8 rows from hole numbers)
+- **Par-Based Fallback**: When hole numbers are obscured/cropped, system uses par row as anchor to infer structure
+- **Robust Layout Detection**: Handles obstructions, partial images, and non-standard scorecard formats
 - **Confidence Scoring**: Based on actual par values extracted from scorecard
 - **Gap Filling**: Vision API only called when Textract leaves null scores
 - **Cost Optimization**: Typically 1 Textract call + 1 Vision call per scorecard

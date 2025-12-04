@@ -34,6 +34,7 @@ export interface ExtractedScorecard {
   date?: string;
   holes: HoleInfo[];
   players: PlayerInfo[];
+  notationStyle?: 'gross' | 'relative'; // Score notation style detected from the scorecard
 }
 
 // Relation to par for a single hole

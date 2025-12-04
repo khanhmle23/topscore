@@ -17,6 +17,7 @@ import {
   getVisualTemplate 
 } from './scorecardTemplate';
 import { cleanupExtractedData } from './cleanupOcr';
+import { parseScoreToGross, detectNotationStyle } from './scoreNotation';
 import type { ExtractedScorecard } from './types';
 
 /**
@@ -360,6 +361,13 @@ IMPORTANT:
     const enhanced = { ...structure };
     
     if (visionScores.scores && Array.isArray(visionScores.scores)) {
+      // Use notation style detected by Textract (already determined from raw values)
+      const scorecardNotation = structure.notationStyle || 'gross';
+      
+      if (scorecardNotation === 'relative') {
+        console.log('[Hybrid OCR] Using RELATIVE-TO-PAR notation for Vision score conversion');
+      }
+      
       enhanced.players = enhanced.players.map(player => {
         console.log(`[Hybrid OCR] Looking for Vision match for Textract player: "${player.name}" (normalized: "${normalizePlayerName(player.name)}")`);
         
@@ -382,25 +390,46 @@ IMPORTANT:
               if (visionScore && visionScore.score !== undefined && visionScore.score !== null) {
                 const hole = structure.holes.find(h => h.holeNumber === scoreEntry.holeNumber);
                 const par = hole?.par || 4;
-                const visionDiff = Math.abs(visionScore.score - par);
                 
-                // Only accept reasonable Vision scores (within 7 of par)
-                if (visionDiff <= 7) {
-                  console.log(
-                    `[Hybrid OCR] Filled gap with Vision for ${player.name} hole ${scoreEntry.holeNumber}: null → ${visionScore.score} (Par: ${par})`
-                  );
-                  // Mark confidence based on how close to par
-                  const confidence = visionDiff <= 3 ? 'high' : visionDiff <= 5 ? 'medium' : 'low';
-                  return { 
-                    ...scoreEntry, 
-                    score: visionScore.score,
-                    confidence,
-                    source: 'vision' as const
-                  };
+                // Convert notation to gross strokes based on scorecard-wide notation style
+                let grossScore: number | null = null;
+                
+                if (scorecardNotation === 'relative') {
+                  // Scorecard uses relative notation - treat plain numbers as relative to par
+                  const scoreStr = String(visionScore.score);
+                  const num = parseInt(scoreStr, 10);
+                  
+                  if (!isNaN(num)) {
+                    grossScore = par + num; // e.g., "1" with par 5 = 6 strokes
+                    console.log(`[Hybrid OCR] Filled gap with Vision for ${player.name} hole ${scoreEntry.holeNumber}: null → ${grossScore} (Par: ${par}, relative notation "${scoreStr}")`);
+                  } else {
+                    grossScore = parseScoreToGross(scoreStr, par);
+                    console.log(`[Hybrid OCR] Filled gap with Vision for ${player.name} hole ${scoreEntry.holeNumber}: null → ${grossScore} (Par: ${par})`);
+                  }
                 } else {
-                  console.log(
-                    `[Hybrid OCR] Rejected Vision score for ${player.name} hole ${scoreEntry.holeNumber}: ${visionScore.score} (too far from par ${par})`
-                  );
+                  // Scorecard uses gross notation - parse as-is
+                  grossScore = parseScoreToGross(String(visionScore.score), par);
+                  console.log(`[Hybrid OCR] Filled gap with Vision for ${player.name} hole ${scoreEntry.holeNumber}: null → ${grossScore} (Par: ${par})`);
+                }
+                
+                if (grossScore !== null) {
+                  const visionDiff = Math.abs(grossScore - par);
+                  
+                  // Only accept reasonable Vision scores (within 7 of par)
+                  if (visionDiff <= 7) {
+                    // Mark confidence based on how close to par
+                    const confidence: 'high' | 'medium' | 'low' = visionDiff <= 3 ? 'high' : visionDiff <= 5 ? 'medium' : 'low';
+                    return { 
+                      ...scoreEntry, 
+                      score: grossScore,
+                      confidence,
+                      source: 'vision' as const
+                    };
+                  } else {
+                    console.log(
+                      `[Hybrid OCR] Rejected Vision score for ${player.name} hole ${scoreEntry.holeNumber}: ${grossScore} (too far from par ${par})`
+                    );
+                  }
                 }
               }
             } else {
@@ -408,7 +437,7 @@ IMPORTANT:
               const hole = structure.holes.find(h => h.holeNumber === scoreEntry.holeNumber);
               const par = hole?.par || 4;
               const diff = Math.abs(scoreEntry.score - par);
-              const confidence = diff <= 3 ? 'high' : diff <= 5 ? 'medium' : 'low';
+              const confidence: 'high' | 'medium' | 'low' = diff <= 3 ? 'high' : diff <= 5 ? 'medium' : 'low';
               
               console.log(
                 `[Hybrid OCR] Keeping Textract score for ${player.name} hole ${scoreEntry.holeNumber}: ${scoreEntry.score} (confidence: ${confidence})`
