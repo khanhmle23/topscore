@@ -111,6 +111,7 @@ export function cleanupExtractedData(scorecard: ExtractedScorecard): ExtractedSc
                         name === 'par' || 
                         name.includes('pace of play') ||
                         /^(black|blue|white|red|green|gold|brown|silver)\s+\d/i.test(player.name) ||
+                        /^m:\s*[\d./]+\s+(black|blue|white|red|green|gold|brown|silver)/i.test(player.name) ||
                         /^(ladies|men|mens|ladies')/i.test(player.name);
     
     if (isNonPlayer) {

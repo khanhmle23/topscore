@@ -12,6 +12,7 @@
 
 import OpenAI from 'openai';
 import { getOpenAIApiKey } from './secrets';
+import { parseScoreToGross } from './scoreNotation';
 
 import type { ExtractedScorecard } from './types';
 
@@ -53,6 +54,18 @@ CRITICAL INSTRUCTIONS:
 4. If a cell is empty or unclear, use null for the score
 5. Pay special attention to handwriting - some numbers may look similar (1/7, 4/9, 5/6, etc.)
 
+SCORE NOTATION SUPPORT:
+Golf scorecards may use TWO different notation styles:
+1. GROSS STROKES: Actual number of strokes (e.g., "4", "5", "6")
+2. RELATIVE TO PAR: Score compared to par (e.g., "+1" = 1 over par, "-1" = 1 under par, "E" or "0" = even par)
+
+For relative-to-par notation, CONVERT to gross strokes:
+- If par is 4 and score shows "+1", the actual score is 5
+- If par is 4 and score shows "-1", the actual score is 3
+- If par is 4 and score shows "E" or "0", the actual score is 4
+
+ALWAYS return scores as GROSS STROKES (the actual number), not relative notation.
+
 Extract the following data:
 - Course name (or use null if not visible)
 - Tee name/color (or use null if not visible)  
@@ -64,7 +77,7 @@ Extract the following data:
   * Handicap/stroke index (1-18, or null if not visible)
 - For EACH player:
   * Player name (exactly as written)
-  * Score for EACH hole (the actual strokes taken, or null if not played/visible)
+  * Score for EACH hole (the actual GROSS strokes taken, or null if not played/visible)
 
 VALIDATION:
 - Hole numbers should be sequential (1, 2, 3, ...)
@@ -151,14 +164,31 @@ Return ONLY valid JSON (no markdown, no code blocks, no explanations):
       handicap: hole.handicap || undefined,
     }));
 
-    // Ensure all players have required fields
-    extracted.players = extracted.players.map((player: any) => ({
-      name: player.name || 'Unknown Player',
-      scores: Array.isArray(player.scores) ? player.scores.map((s: any) => ({
-        holeNumber: s.holeNumber || 0,
-        score: s.score === null || s.score === undefined ? null : s.score,
-      })) : [],
-    }));
+    // Ensure all players have required fields and normalize scores to gross strokes
+    extracted.players = extracted.players.map((player: any) => {
+      // Find par values for each hole for notation conversion
+      const parMap = new Map<number, number>();
+      extracted.holes.forEach((hole: any) => {
+        parMap.set(hole.holeNumber, hole.par || 4);
+      });
+
+      return {
+        name: player.name || 'Unknown Player',
+        scores: Array.isArray(player.scores) ? player.scores.map((s: any) => {
+          const holeNumber = s.holeNumber || 0;
+          const par = parMap.get(holeNumber) || 4;
+          
+          // Parse score using notation detection (handles both gross and relative-to-par)
+          // Even though we instructed Vision API to convert, double-check for safety
+          const normalizedScore = parseScoreToGross(s.score, par);
+          
+          return {
+            holeNumber,
+            score: normalizedScore,
+          };
+        }) : [],
+      };
+    });
 
     console.log('[OpenAI Vision] Successfully extracted scorecard:', {
       course: extracted.courseName,
