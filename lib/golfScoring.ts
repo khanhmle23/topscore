@@ -52,6 +52,11 @@ export function calculatePlayerTotals(player: PlayerInfo): PlayerInfo {
   let backNineCount = 0;
 
   player.scores.forEach((scoreEntry: PlayerHoleScore) => {
+    // Only process numeric hole numbers (1-18)
+    if (typeof scoreEntry.holeNumber !== 'number') {
+      return;
+    }
+    
     if (scoreEntry.score !== null && scoreEntry.score !== undefined) {
       if (scoreEntry.holeNumber >= 1 && scoreEntry.holeNumber <= 9) {
         frontNine += scoreEntry.score;
