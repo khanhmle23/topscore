@@ -11,7 +11,24 @@ This document outlines the security measures implemented in TopScore Golf PWA.
 - **Location**: `middleware.ts`
 - **Headers**: Returns `X-RateLimit-Limit` and `X-RateLimit-Remaining`
 
-### 2. **File Upload Validation**
+### 2. **CORS Policy**
+- **What**: Only allows API requests from same origin (your domain)
+- **Why**: Prevents other websites from calling your API
+- **Location**: `middleware.ts`
+- **Behavior**: Returns 403 for cross-origin API requests
+
+### 3. **Content Security Policy (CSP)**
+- **What**: Restricts sources for scripts, styles, images, etc.
+- **Why**: Prevents XSS attacks by blocking unauthorized scripts
+- **Location**: `middleware.ts`
+- **Policy**: 
+  - Scripts: self + inline (Next.js requirement)
+  - Styles: self + inline (Tailwind requirement)
+  - Images: self, data URIs, blobs
+  - Connects: self only
+  - Frames: none (prevents clickjacking)
+
+### 4. **File Upload Validation**
 - **MIME Type Checking**: Only allows image files (JPG, PNG, WebP, HEIC)
 - **File Size Limits**: 
   - Minimum: 100 bytes (prevents empty files)
@@ -19,16 +36,17 @@ This document outlines the security measures implemented in TopScore Golf PWA.
 - **Filename Sanitization**: Removes path traversal attempts (`../`, `./`)
 - **Location**: `lib/fileValidator.ts`
 
-### 3. **HEIC/HEIF Support**
+### 5. **HEIC/HEIF Support**
 - **What**: Converts iPhone HEIC images to JPEG automatically
 - **Why**: Native iOS format isn't widely supported for processing
 - **Security**: Validates HEIC files before conversion
 - **Location**: `lib/heicConverter.ts`
 
-### 4. **Security Headers**
+### 6. **Security Headers**
 Applied to all responses via middleware:
 
 ```
+Content-Security-Policy: Restricts resource loading
 X-Content-Type-Options: nosniff
 X-Frame-Options: DENY
 X-XSS-Protection: 1; mode=block
@@ -36,17 +54,17 @@ Referrer-Policy: strict-origin-when-cross-origin
 Permissions-Policy: camera=(), microphone=(), geolocation=()
 ```
 
-### 5. **HTTPS Enforcement**
+### 7. **HTTPS Enforcement**
 - **What**: PWA requires HTTPS to function
 - **Why**: Prevents man-in-the-middle attacks
 - **Provider**: Vercel automatically provides HTTPS
 
-### 6. **Service Worker Security**
+### 8. **Service Worker Security**
 - **Origin Checking**: Only caches same-origin requests
 - **Cache Isolation**: Separate cache namespaces per version
 - **Location**: `public/sw.js`
 
-### 7. **Input Sanitization**
+### 9. **Input Sanitization**
 - Filenames sanitized before logging
 - No user input directly executed
 - Buffer validation before processing
@@ -54,29 +72,33 @@ Permissions-Policy: camera=(), microphone=(), geolocation=()
 ## ⚠️ Known Limitations
 
 ### 1. **No User Authentication**
-- **Risk**: Anyone can upload images and use API
-- **Mitigation**: Rate limiting prevents abuse
-- **Future**: Consider adding API keys for production use
+- **Risk**: Anyone with the URL can upload images and use API
+- **Mitigation**: Rate limiting prevents abuse, CORS blocks external sites
+- **Future**: Consider adding:
+  - API keys for registered users
+  - OAuth authentication
+  - Email verification for uploads
 
-### 2. **API Keys in Backend Only**
-- **Current**: AWS and OpenAI keys stored in environment variables
-- **Good**: Not exposed to client
-- **Risk**: Still accessible via API if someone reverse engineers
-- **Future**: Consider API gateway with authentication
+### 2. **API Keys in Environment**
+- **Current**: AWS and OpenAI keys stored in environment variables (backend only)
+- **Good**: Not exposed to client, not in Git
+- **Risk**: Still accessible if server compromised
+- **Future**: Use AWS Secrets Manager rotation for production
 
 ### 3. **In-Memory Rate Limiting**
 - **Risk**: Resets on server restart, can be bypassed with IP rotation
-- **Mitigation**: Acceptable for small-scale use
+- **Mitigation**: Acceptable for small-scale use, CORS blocks external abuse
 - **Future**: Use Redis for persistent rate limiting in production
 
-### 4. **No Request Signing**
-- **Risk**: Anyone can call the API endpoints
-- **Future**: Implement HMAC request signing for production
+### 4. **CORS Limitation**
+- **Current**: Blocks cross-origin requests to API
+- **Limitation**: Same-origin policy only
+- **If needed**: Can whitelist specific domains in `middleware.ts`
 
-### 5. **No Content Security Policy (CSP)**
-- **Risk**: XSS attacks possible if user input ever rendered
-- **Current**: No user input rendered directly (low risk)
-- **Future**: Add CSP headers for defense-in-depth
+### 5. **CSP Inline Scripts**
+- **Risk**: Allows inline scripts (required by Next.js dev mode)
+- **Mitigation**: Only affects development, tighten for production
+- **Future**: Use nonces for inline scripts in production
 
 ## 🔒 Best Practices for Deployment
 

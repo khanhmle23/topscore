@@ -47,8 +47,19 @@ function checkRateLimit(key: string): { allowed: boolean; remaining: number } {
 }
 
 export function middleware(request: NextRequest) {
-  // Apply rate limiting to API routes
+  const origin = request.headers.get('origin');
+  const requestUrl = new URL(request.url);
+  
+  // Apply rate limiting and CORS to API routes
   if (request.nextUrl.pathname.startsWith('/api/')) {
+    // CORS Policy - Only allow requests from same origin
+    if (origin && origin !== requestUrl.origin) {
+      return NextResponse.json(
+        { error: 'CORS policy: Cross-origin requests not allowed' },
+        { status: 403 }
+      );
+    }
+
     const key = getRateLimitKey(request);
     const { allowed, remaining } = checkRateLimit(key);
 
@@ -84,8 +95,23 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
-  // Security headers for all routes
+  // Content Security Policy for all routes
   const response = NextResponse.next();
+  
+  // CSP - Prevent XSS attacks
+  const cspHeader = [
+    "default-src 'self'",
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval'", // Next.js requires unsafe-eval in dev
+    "style-src 'self' 'unsafe-inline'", // Tailwind requires unsafe-inline
+    "img-src 'self' data: blob:",
+    "font-src 'self' data:",
+    "connect-src 'self'",
+    "frame-ancestors 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+  ].join('; ');
+  
+  response.headers.set('Content-Security-Policy', cspHeader);
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('X-Frame-Options', 'DENY');
   response.headers.set('X-XSS-Protection', '1; mode=block');
