@@ -15,12 +15,14 @@ interface ScorecardEditorProps {
   initialScorecard: ExtractedScorecard;
   initialDerived: DerivedScoring;
   onScorecardChange: (scorecard: ExtractedScorecard, derived: DerivedScoring) => void;
+  onAddPlayers?: () => void;
 }
 
-export default function ScorecardEditor({
+function ScorecardEditor({
   initialScorecard,
   initialDerived,
   onScorecardChange,
+  onAddPlayers,
 }: ScorecardEditorProps) {
   const [scorecard, setScorecard] = useState<ExtractedScorecard>(initialScorecard);
   const [derived, setDerived] = useState<DerivedScoring>(initialDerived);
@@ -31,7 +33,13 @@ export default function ScorecardEditor({
   const frontNineHoles = scorecard.holes.filter(h => h.holeNumber <= 9);
   const backNineHoles = scorecard.holes.filter(h => h.holeNumber >= 10);
 
-  // Recalculate derived data when scorecard changes
+  // Update internal state when props change (e.g., when players are added)
+  useEffect(() => {
+    setScorecard(initialScorecard);
+    setDerived(initialDerived);
+  }, [initialScorecard, initialDerived]);
+
+  // Recalculate derived data when scorecard changes (only from user edits)
   useEffect(() => {
     // Skip the initial mount to avoid calling onScorecardChange unnecessarily
     if (isInitialMount.current) {
@@ -42,13 +50,13 @@ export default function ScorecardEditor({
     const newDerived = calculateDerivedScoring(scorecard);
     setDerived(newDerived);
     onScorecardChange(scorecard, newDerived);
-  }, [scorecard]);
+  }, [scorecard]);  // Removed onScorecardChange from dependencies to prevent infinite loop
 
   const handleScoreChange = (playerName: string, holeNumber: number, newScore: string) => {
     const scoreValue = newScore === '' ? null : parseInt(newScore, 10);
     
     if (scoreValue !== null && (isNaN(scoreValue) || scoreValue < 1 || scoreValue > 20)) {
-      return; // Invalid score
+      return;
     }
 
     setScorecard((prev) => {
@@ -66,10 +74,9 @@ export default function ScorecardEditor({
         ),
       };
 
-      // Recalculate totals for all players
       return {
         ...updatedScorecard,
-        players: updatedScorecard.players.map(player => calculatePlayerTotals(player)),
+        players: updatedScorecard.players.map((player) => calculatePlayerTotals(player)),
       };
     });
   };
@@ -77,26 +84,52 @@ export default function ScorecardEditor({
   return (
     <div className="space-y-6">
       {/* Course Info */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          {scorecard.courseName}
-        </h2>
-        {scorecard.teeName && (
-          <p className="text-sm text-gray-600">Tee: {scorecard.teeName}</p>
-        )}
-        {scorecard.date && (
-          <p className="text-sm text-gray-600">Date: {scorecard.date}</p>
-        )}
+      <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
+              {scorecard.courseName}
+            </h2>
+            {scorecard.teeName && (
+              <p className="text-sm text-gray-600">Tee: {scorecard.teeName}</p>
+            )}
+            {scorecard.date && (
+              <p className="text-sm text-gray-600">Date: {scorecard.date}</p>
+            )}
+          </div>
+          {onAddPlayers && (
+            <button
+              onClick={onAddPlayers}
+              className="flex items-center px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              <svg
+                className="w-5 h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+              Add Players
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Scorecard Table */}
-      <div className="bg-white rounded-lg shadow overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Hole
-              </th>
+      <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+              <tr>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Hole
+                </th>
               {/* Front 9 holes */}
               {scorecard.holes.filter(h => h.holeNumber <= 9).map((hole) => (
                 <th
@@ -270,49 +303,50 @@ export default function ScorecardEditor({
             })}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {derived.players.map((player) => (
-          <div key={player.name} className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          <div key={player.name} className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-shadow duration-200">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-3 border-b border-gray-200">
               {player.name}
             </h3>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Score:</span>
-                <span className="font-semibold">
+            <div className="space-y-2.5 text-sm">
+              <div className="flex justify-between items-center p-2 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50">
+                <span className="text-gray-700 font-medium">Score:</span>
+                <span className="font-bold text-gray-900">
                   {player.totalScore} ({player.scoreToPar >= 0 ? '+' : ''}
                   {player.scoreToPar})
                 </span>
               </div>
               {player.eagles > 0 && (
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center p-2 rounded-lg hover:bg-purple-50 transition-colors">
                   <span className="text-gray-600">Eagles:</span>
                   <span className="font-semibold text-purple-600">{player.eagles}</span>
                 </div>
               )}
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center p-2 rounded-lg hover:bg-blue-50 transition-colors">
                 <span className="text-gray-600">Birdies:</span>
                 <span className="font-semibold text-blue-600">{player.birdies}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 transition-colors">
                 <span className="text-gray-600">Pars:</span>
-                <span className="font-semibold">{player.pars}</span>
+                <span className="font-semibold text-gray-700">{player.pars}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center p-2 rounded-lg hover:bg-orange-50 transition-colors">
                 <span className="text-gray-600">Bogeys:</span>
                 <span className="font-semibold text-orange-600">{player.bogeys}</span>
               </div>
               {player.doubleBogeys > 0 && (
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center p-2 rounded-lg hover:bg-red-50 transition-colors">
                   <span className="text-gray-600">Double Bogeys:</span>
                   <span className="font-semibold text-red-600">{player.doubleBogeys}</span>
                 </div>
               )}
               {player.tripleBogeyPlus > 0 && (
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center p-2 rounded-lg hover:bg-red-50 transition-colors">
                   <span className="text-gray-600">Triple+:</span>
                   <span className="font-semibold text-red-800">{player.tripleBogeyPlus}</span>
                 </div>
@@ -324,3 +358,5 @@ export default function ScorecardEditor({
     </div>
   );
 }
+
+export default ScorecardEditor;
