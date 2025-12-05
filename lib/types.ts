@@ -12,7 +12,7 @@ export interface HoleInfo {
 
 // Individual player's score for a specific hole
 export interface PlayerHoleScore {
-  holeNumber: number;
+  holeNumber: number | string; // string to handle OCR extracting "OUT", "IN", "TOTAL" columns
   score: number | null; // null if not played yet
   confidence?: 'high' | 'medium' | 'low'; // OCR confidence level
   source?: 'textract' | 'vision' | 'manual'; // Where the score came from
