@@ -13,6 +13,7 @@ import { useState } from 'react';
 import ScorecardUpload from '@/components/ScorecardUpload';
 import ScorecardEditor from '@/components/ScorecardEditor';
 import AdditionalPlayersUpload from '@/components/AdditionalPlayersUpload';
+import PWAInstall from '@/components/PWAInstall';
 import { calculateDerivedScoring } from '@/lib/golfScoring';
 import { mergePlayers, validateScorecardCompatibility, getMergeSummary } from '@/lib/mergeScorecards';
 import type { ExtractedScorecard, DerivedScoring, ScorecardAnalysisResponse } from '@/lib/types';
@@ -285,6 +286,9 @@ export default function Home() {
           <p>Powered by AI</p>
         </div>
       </div>
+
+      {/* PWA Install Prompt */}
+      <PWAInstall />
     </main>
   );
 }
