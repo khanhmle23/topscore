@@ -371,7 +371,7 @@ Return ONLY valid JSON with scores for all players:
           if (diff <= 5) {
             return {
               ...scoreEntry,
-              confidence: diff <= 3 ? 'high' : 'medium',
+              confidence: (diff <= 3 ? 'high' : 'medium') as 'high' | 'medium' | 'low',
               source: 'textract' as const,
             };
           }
@@ -386,7 +386,7 @@ Return ONLY valid JSON with scores for all players:
           return {
             ...scoreEntry,
             score: visionScore.score,
-            confidence: diff <= 3 ? 'high' : diff <= 5 ? 'medium' : 'low',
+            confidence: (diff <= 3 ? 'high' : diff <= 5 ? 'medium' : 'low') as 'high' | 'medium' | 'low',
             source: 'vision' as const,
           };
         }
