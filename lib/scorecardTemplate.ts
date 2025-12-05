@@ -186,7 +186,7 @@ Remember: Golf scores follow patterns. Use the PAR values as your guide!`;
  */
 export function validateAgainstTemplate(
   holes: { holeNumber: number; par: number; yardage?: number; handicap?: number }[],
-  players: { name: string; scores: { holeNumber: number; score: number | null }[] }[]
+  players: { name: string; scores: { holeNumber: number | string; score: number | null }[] }[]
 ): { valid: boolean; warnings: string[] } {
   const warnings: string[] = [];
   const template = detectTemplate(holes.length);
