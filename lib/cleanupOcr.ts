@@ -67,9 +67,12 @@ export function cleanupExtractedData(scorecard: ExtractedScorecard): ExtractedSc
           console.log(`[Cleanup] Removing ${player.name}'s ${scoreEntry.holeNumber} column (will be auto-calculated)`);
           return false;
         }
+        // Any other string is invalid
+        console.log(`[Cleanup] Removing ${player.name}'s score for invalid hole string: ${scoreEntry.holeNumber}`);
+        return false;
       }
       
-      // Must be for a valid hole
+      // Must be for a valid hole (at this point we know it's a number)
       if (!validHoleNumbers.includes(scoreEntry.holeNumber)) {
         console.log(`[Cleanup] Removing ${player.name}'s score for invalid hole: ${scoreEntry.holeNumber}`);
         return false;
@@ -89,8 +92,8 @@ export function cleanupExtractedData(scorecard: ExtractedScorecard): ExtractedSc
       return true;
     });
 
-    // Sort scores by hole number
-    validScores.sort((a, b) => a.holeNumber - b.holeNumber);
+    // Sort scores by hole number (all strings have been filtered out at this point)
+    validScores.sort((a, b) => (a.holeNumber as number) - (b.holeNumber as number));
 
     // Remove duplicate scores (keep first occurrence)
     const uniqueScores = validScores.filter((score, index, array) =>
