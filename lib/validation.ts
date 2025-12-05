@@ -4,7 +4,7 @@
  * This module helps improve extraction accuracy by comparing against known correct data
  */
 
-import type { ExtractedScorecard } from './types';
+import type { ExtractedScorecard, HoleInfo } from './types';
 import fs from 'fs';
 import path from 'path';
 
@@ -51,7 +51,7 @@ export function validateAndCorrect(extracted: ExtractedScorecard): ExtractedScor
   
   // Validate hole data
   if (corrected.holes.length === reference.holes.length) {
-    corrected.holes = corrected.holes.map((hole, index) => {
+    corrected.holes = corrected.holes.map((hole: HoleInfo, index: number) => {
       const refHole = reference.holes[index];
       const corrections: string[] = [];
       
