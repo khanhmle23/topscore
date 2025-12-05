@@ -60,7 +60,8 @@ export async function POST(request: NextRequest) {
     // Convert HEIC to JPEG if needed
     if (isHeicFile(file!.type, file!.name)) {
       console.log('[API /api/scorecards] HEIC file detected, converting...');
-      buffer = await convertHeicToJpeg(buffer);
+      const convertedBuffer = await convertHeicToJpeg(buffer);
+      buffer = Buffer.from(convertedBuffer);
     }
 
     // Extract structured data using hybrid OCR approach
