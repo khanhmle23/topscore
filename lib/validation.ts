@@ -4,7 +4,7 @@
  * This module helps improve extraction accuracy by comparing against known correct data
  */
 
-import type { ExtractedScorecard, HoleInfo } from './types';
+import type { ExtractedScorecard, HoleInfo, PlayerInfo } from './types';
 import fs from 'fs';
 import path from 'path';
 
@@ -80,7 +80,7 @@ export function validateAndCorrect(extracted: ExtractedScorecard): ExtractedScor
   }
   
   // Validate and correct player scores
-  corrected.players = corrected.players.map((player) => {
+  corrected.players = corrected.players.map((player: PlayerInfo) => {
     // Find matching reference player (case-insensitive, fuzzy match)
     const normalizedName = normalizePlayerName(player.name);
     console.log(`[Validation] Looking for player: "${player.name}" (normalized: "${normalizedName}")`);
