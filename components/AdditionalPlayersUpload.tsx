@@ -28,9 +28,12 @@ export default function AdditionalPlayersUpload({
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      setError('Please select an image file');
+    // Validate file type (including HEIC)
+    const isImage = file.type.startsWith('image/');
+    const isHeic = file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif');
+    
+    if (!isImage && !isHeic) {
+      setError('Please select an image file (JPG, PNG, WebP, HEIC)');
       return;
     }
 
@@ -143,13 +146,13 @@ export default function AdditionalPlayersUpload({
                       name="additional-file-upload"
                       type="file"
                       className="sr-only"
-                      accept="image/*"
+                      accept="image/*,.heic,.heif"
                       onChange={handleFileChange}
                     />
                   </label>
                 </div>
                 <p className="mt-3 text-xs text-gray-500">
-                  PNG, JPG, JPEG up to 10MB
+                  JPG, PNG, WebP, HEIC up to 10MB
                 </p>
               </div>
             </div>

@@ -21,6 +21,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { analyzeWithHybridOcr } from '@/lib/hybridOcr';
 import { calculateDerivedScoring, calculatePlayerTotals } from '@/lib/golfScoring';
+import { validateUploadedFile, sanitizeFilename } from '@/lib/fileValidator';
+import { convertHeicToJpeg, isHeicFile } from '@/lib/heicConverter';
 import type { ScorecardAnalysisResponse } from '@/lib/types';
 
 export const runtime = 'nodejs';
@@ -34,38 +36,32 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
     const file = formData.get('image') as File | null;
 
-    if (!file) {
+    // Validate file with security checks
+    const validation = validateUploadedFile(file);
+    if (!validation.valid) {
       return NextResponse.json(
-        { error: 'No image file provided' },
+        { error: validation.error },
         { status: 400 }
       );
     }
 
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      return NextResponse.json(
-        { error: 'File must be an image' },
-        { status: 400 }
-      );
-    }
-
-    // Validate file size (max 10MB)
-    if (file.size > 10 * 1024 * 1024) {
-      return NextResponse.json(
-        { error: 'Image file too large (max 10MB)' },
-        { status: 400 }
-      );
-    }
+    // Sanitize filename for logging
+    const sanitizedName = sanitizeFilename(file!.name);
 
     console.log('[API /api/scorecards] Processing image:', {
-      name: file.name,
-      type: file.type,
-      size: file.size,
+      name: sanitizedName,
+      type: file!.type,
+      size: file!.size,
     });
 
     // Convert file to buffer
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    let buffer = Buffer.from(await file!.arrayBuffer());
+
+    // Convert HEIC to JPEG if needed
+    if (isHeicFile(file!.type, file!.name)) {
+      console.log('[API /api/scorecards] HEIC file detected, converting...');
+      buffer = await convertHeicToJpeg(buffer);
+    }
 
     // Extract structured data using hybrid OCR approach
     // (Textract for structure + Vision fills gaps only)

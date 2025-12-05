@@ -20,8 +20,12 @@ export default function ScorecardUpload({ onAnalysisComplete }: ScorecardUploadP
   const [dragActive, setDragActive] = useState(false);
 
   const handleFile = async (file: File) => {
-    if (!file.type.startsWith('image/')) {
-      setError('Please upload an image file');
+    // Check if it's an image or HEIC file
+    const isImage = file.type.startsWith('image/');
+    const isHeic = file.name.toLowerCase().endsWith('.heic') || file.name.toLowerCase().endsWith('.heif');
+    
+    if (!isImage && !isHeic) {
+      setError('Please upload an image file (JPG, PNG, WebP, HEIC)');
       return;
     }
 
@@ -137,7 +141,7 @@ export default function ScorecardUpload({ onAnalysisComplete }: ScorecardUploadP
               <label className="inline-block">
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/*,.heic,.heif"
                   onChange={handleFileInput}
                   className="hidden"
                   disabled={isUploading}
