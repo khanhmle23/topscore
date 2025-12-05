@@ -64,7 +64,7 @@ export async function getOpenAIApiKey(): Promise<string> {
     cachedOpenAIApiKey = secret.OPENAI_API_KEY;
     console.log('[Secrets] Successfully retrieved and cached OpenAI API key');
     
-    return cachedOpenAIApiKey;
+    return secret.OPENAI_API_KEY;
   } catch (error) {
     console.error('[Secrets] Error fetching OpenAI API key from Secrets Manager:', error);
     
@@ -72,7 +72,7 @@ export async function getOpenAIApiKey(): Promise<string> {
     if (process.env.OPENAI_API_KEY) {
       console.log('[Secrets] Falling back to OPENAI_API_KEY environment variable');
       cachedOpenAIApiKey = process.env.OPENAI_API_KEY;
-      return cachedOpenAIApiKey;
+      return process.env.OPENAI_API_KEY;
     }
     
     throw new Error('Failed to retrieve OpenAI API key. Ensure AWS Secrets Manager is configured or OPENAI_API_KEY is set.');
