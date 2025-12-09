@@ -99,6 +99,71 @@ function ScorecardEditor({
     }));
   };
 
+  const exportToCSV = () => {
+    // Build CSV content
+    const rows: string[][] = [];
+    
+    // Header row with course info
+    rows.push([scorecard.courseName]);
+    if (scorecard.date) rows.push(['Date:', scorecard.date]);
+    if (scorecard.teeName) rows.push(['Tee:', scorecard.teeName]);
+    rows.push([]); // Empty row
+    
+    // Column headers
+    const headers = ['Player', ...scorecard.holes.map(h => `Hole ${h.holeNumber}`), 'Out', 'In', 'Total', 'Score to Par'];
+    rows.push(headers);
+    
+    // Par row
+    const parRow = ['Par', ...scorecard.holes.map(h => h.par.toString()), 
+      scorecard.holes.filter(h => h.holeNumber <= 9).reduce((sum, h) => sum + h.par, 0).toString(),
+      scorecard.holes.filter(h => h.holeNumber >= 10).reduce((sum, h) => sum + h.par, 0).toString(),
+      scorecard.holes.reduce((sum, h) => sum + h.par, 0).toString(),
+      '0'
+    ];
+    rows.push(parRow);
+    
+    // Player rows
+    scorecard.players.forEach(player => {
+      const playerDerived = derived.players.find(p => p.name === player.name);
+      const scores = scorecard.holes.map(hole => {
+        const score = player.scores.find(s => s.holeNumber === hole.holeNumber);
+        return score?.score?.toString() || '';
+      });
+      
+      const row = [
+        player.name,
+        ...scores,
+        player.frontNine?.toString() || '',
+        player.backNine?.toString() || '',
+        player.total?.toString() || '',
+        playerDerived ? (playerDerived.scoreToPar > 0 ? `+${playerDerived.scoreToPar}` : playerDerived.scoreToPar.toString()) : ''
+      ];
+      rows.push(row);
+    });
+    
+    // Convert to CSV string
+    const csvContent = rows.map(row => 
+      row.map(cell => {
+        // Escape quotes and wrap in quotes if contains comma
+        const escaped = cell.replace(/"/g, '""');
+        return escaped.includes(',') ? `"${escaped}"` : escaped;
+      }).join(',')
+    ).join('\n');
+    
+    // Create download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    const fileName = `${scorecard.courseName.replace(/[^a-z0-9]/gi, '_')}_${scorecard.date || 'scorecard'}.csv`;
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', fileName);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="space-y-6">
       {/* Course Info */}
@@ -119,27 +184,38 @@ function ScorecardEditor({
               <p className="text-sm text-gray-600">Date: {scorecard.date}</p>
             )}
           </div>
-          {onAddPlayers && (
+          <div className="flex gap-3">
             <button
-              onClick={onAddPlayers}
-              className="flex items-center px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
+              onClick={exportToCSV}
+              className="flex items-center px-5 py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
             >
-              <svg
-                className="w-5 h-5 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 4v16m8-8H4"
-                />
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              Add Players
+              Export CSV
             </button>
-          )}
+            {onAddPlayers && (
+              <button
+                onClick={onAddPlayers}
+                className="flex items-center px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
+              >
+                <svg
+                  className="w-5 h-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+                Add Players
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
