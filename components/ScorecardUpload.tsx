@@ -108,8 +108,15 @@ export default function ScorecardUpload({ onAnalysisComplete }: ScorecardUploadP
       >
         <div className="space-y-6">
           <div className="flex justify-center">
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
-              <span className="text-4xl">⛳</span>
+            <div className="relative w-32 h-32 rounded-2xl overflow-hidden shadow-lg border-2 border-blue-200">
+              <img 
+                src="/scorecard-example.jpg" 
+                alt="Golf scorecard example" 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-indigo-600/20 flex items-center justify-center">
+                <span className="text-5xl drop-shadow-lg">📸</span>
+              </div>
             </div>
           </div>
           

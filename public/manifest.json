@@ -1,7 +1,7 @@
 {
-  "name": "TopScore Golf",
+  "name": "TopScore Golf Scorecard Extractor",
   "short_name": "TopScore",
-  "description": "AI-powered golf scorecard analysis",
+  "description": "AI-powered golf scorecard extractor and analyzer",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f8fafc",
