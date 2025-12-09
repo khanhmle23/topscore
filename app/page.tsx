@@ -147,7 +147,7 @@ export default function Home() {
                   </span>
                   <p className="pt-1">
                     <strong className="text-gray-900">Upload your scorecard</strong> - 
-                    Take a photo of your golf scorecard and upload it
+                    Take a clear photo of your golf scorecard and upload it
                   </p>
                 </div>
                 <div className="flex items-start group">
@@ -171,6 +171,15 @@ export default function Home() {
                 <div className="flex items-start group">
                   <span className="flex-shrink-0 w-8 h-8 rounded-xl bg-gradient-to-br from-pink-500 to-pink-600 text-white flex items-center justify-center font-semibold mr-3 shadow-sm group-hover:shadow-md transition-shadow">
                     4
+                  </span>
+                  <p className="pt-1">
+                    <strong className="text-gray-900">Export your data</strong> - 
+                    Download your scorecard data as CSV for easy sharing and record keeping
+                  </p>
+                </div>
+                <div className="flex items-start group">
+                  <span className="flex-shrink-0 w-8 h-8 rounded-xl bg-gradient-to-br from-rose-500 to-rose-600 text-white flex items-center justify-center font-semibold mr-3 shadow-sm group-hover:shadow-md transition-shadow">
+                    5
                   </span>
                   <p className="pt-1">
                     <strong className="text-gray-900">Add more players</strong> - 
