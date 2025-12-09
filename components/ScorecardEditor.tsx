@@ -81,15 +81,37 @@ function ScorecardEditor({
     });
   };
 
+  const handleCourseNameChange = (newName: string) => {
+    setScorecard((prev) => ({
+      ...prev,
+      courseName: newName,
+    }));
+  };
+
+  const handlePlayerNameChange = (oldName: string, newName: string) => {
+    if (!newName.trim()) return; // Don't allow empty names
+    
+    setScorecard((prev) => ({
+      ...prev,
+      players: prev.players.map((player) =>
+        player.name === oldName ? { ...player, name: newName.trim() } : player
+      ),
+    }));
+  };
+
   return (
     <div className="space-y-6">
       {/* Course Info */}
       <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 p-6">
         <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
-              {scorecard.courseName}
-            </h2>
+          <div className="flex-1">
+            <input
+              type="text"
+              value={scorecard.courseName}
+              onChange={(e) => handleCourseNameChange(e.target.value)}
+              className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2 border-b-2 border-transparent hover:border-blue-300 focus:border-blue-500 focus:outline-none transition-colors w-full"
+              placeholder="Course Name"
+            />
             {scorecard.teeName && (
               <p className="text-sm text-gray-600">Tee: {scorecard.teeName}</p>
             )}
@@ -210,7 +232,13 @@ function ScorecardEditor({
               return (
                 <tr key={player.name} className={playerIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                   <td className="px-4 py-3 text-sm font-medium text-gray-900">
-                    {player.name}
+                    <input
+                      type="text"
+                      value={player.name}
+                      onChange={(e) => handlePlayerNameChange(player.name, e.target.value)}
+                      className="w-full border-b border-transparent hover:border-gray-300 focus:border-blue-500 focus:outline-none transition-colors bg-transparent font-medium"
+                      placeholder="Player Name"
+                    />
                   </td>
                   {/* Front 9 scores */}
                   {scorecard.holes.filter(h => h.holeNumber <= 9).map((hole) => {
