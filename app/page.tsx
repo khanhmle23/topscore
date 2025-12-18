@@ -112,7 +112,7 @@ export default function Home() {
               <img 
                 src="/Topscore_Logo-192.png" 
                 alt="TopScore Logo" 
-                className="w-12 h-12 rounded-xl shadow-md"
+                className="w-12 h-12 shadow-md"
               />
               <div>
                 <h1 className="text-3xl font-bold text-black">
@@ -126,7 +126,7 @@ export default function Home() {
             {scorecard && (
               <button
                 onClick={handleReset}
-                className="px-4 py-2 bg-black hover:bg-gray-800 text-white rounded-xl transition-all duration-200 font-medium shadow-sm hover:shadow-md"
+                className="px-4 py-2 bg-black hover:bg-gray-800 text-white transition-all duration-200 font-medium shadow-sm hover:shadow-md"
               >
                 New Scorecard
               </button>
@@ -143,13 +143,13 @@ export default function Home() {
             <ScorecardUpload onAnalysisComplete={handleAnalysisComplete} />
             
             {/* Info Section */}
-            <div className="mt-8 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 p-6">
+            <div className="mt-8 bg-white/70 backdrop-blur-sm shadow-lg border border-gray-100 p-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">
                 How It Works
               </h2>
               <div className="space-y-3 text-sm text-gray-600">
                 <div className="flex items-start group">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-xl bg-black text-white flex items-center justify-center font-semibold mr-3 shadow-sm group-hover:shadow-md transition-shadow">
+                  <span className="flex-shrink-0 w-8 h-8 bg-black text-white flex items-center justify-center font-semibold mr-3 shadow-sm group-hover:shadow-md transition-shadow">
                     1
                   </span>
                   <p className="pt-1">
@@ -158,7 +158,7 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="flex items-start group">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-xl bg-gray-800 text-white flex items-center justify-center font-semibold mr-3 shadow-sm group-hover:shadow-md transition-shadow">
+                  <span className="flex-shrink-0 w-8 h-8 bg-gray-800 text-white flex items-center justify-center font-semibold mr-3 shadow-sm group-hover:shadow-md transition-shadow">
                     2
                   </span>
                   <p className="pt-1">
@@ -167,7 +167,7 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="flex items-start group">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-xl bg-gray-700 text-white flex items-center justify-center font-semibold mr-3 shadow-sm group-hover:shadow-md transition-shadow">
+                  <span className="flex-shrink-0 w-8 h-8 bg-gray-700 text-white flex items-center justify-center font-semibold mr-3 shadow-sm group-hover:shadow-md transition-shadow">
                     3
                   </span>
                   <p className="pt-1">
@@ -176,7 +176,7 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="flex items-start group">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-xl bg-gray-600 text-white flex items-center justify-center font-semibold mr-3 shadow-sm group-hover:shadow-md transition-shadow">
+                  <span className="flex-shrink-0 w-8 h-8 bg-gray-600 text-white flex items-center justify-center font-semibold mr-3 shadow-sm group-hover:shadow-md transition-shadow">
                     4
                   </span>
                   <p className="pt-1">
@@ -185,7 +185,7 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="flex items-start group">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-xl bg-gray-500 text-white flex items-center justify-center font-semibold mr-3 shadow-sm group-hover:shadow-md transition-shadow">
+                  <span className="flex-shrink-0 w-8 h-8 bg-gray-500 text-white flex items-center justify-center font-semibold mr-3 shadow-sm group-hover:shadow-md transition-shadow">
                     5
                   </span>
                   <p className="pt-1">
@@ -201,7 +201,7 @@ export default function Home() {
           <div className="max-w-5xl mx-auto">
             {/* Success message */}
             {mergeSuccess && (
-              <div className="mb-6 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-4 shadow-sm">
+              <div className="mb-6 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 p-4 shadow-sm">
                 <div className="flex">
                   <div className="flex-shrink-0">
                     <svg
@@ -257,10 +257,10 @@ export default function Home() {
         {/* Merge Error Modal */}
         {mergeError && (
           <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-200">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-in zoom-in-95 duration-200">
+            <div className="bg-white shadow-2xl max-w-md w-full p-6 animate-in zoom-in-95 duration-200">
               <div className="flex items-start">
                 <div className="flex-shrink-0">
-                  <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                  <div className="w-12 h-12 bg-red-100 flex items-center justify-center">
                     <svg
                       className="h-6 w-6 text-red-600"
                       fill="none"
@@ -286,7 +286,7 @@ export default function Home() {
               <div className="mt-6 flex justify-end">
                 <button
                   onClick={() => setMergeError(null)}
-                  className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 font-medium shadow-sm hover:shadow-md"
+                  className="px-5 py-2.5 bg-black hover:bg-gray-800 text-white transition-all duration-200 font-medium shadow-sm hover:shadow-md"
                 >
                   OK
                 </button>

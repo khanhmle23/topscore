@@ -96,7 +96,7 @@ export default function ScorecardUpload({ onAnalysisComplete }: ScorecardUploadP
   return (
     <div className="w-full">
       <div
-        className={`relative border-2 border-dashed rounded-2xl p-6 sm:p-8 text-center transition-all duration-200 ${
+        className={`relative border-2 border-dashed p-6 sm:p-8 text-center transition-all duration-200 ${
           dragActive
             ? 'border-black bg-gray-50 shadow-lg scale-105'
             : 'border-gray-300 bg-white/50 backdrop-blur-sm hover:border-gray-700 hover:shadow-md'
@@ -108,7 +108,7 @@ export default function ScorecardUpload({ onAnalysisComplete }: ScorecardUploadP
       >
         <div className="space-y-4">
           <div className="flex justify-center">
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden shadow-lg border-2 border-gray-300">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 overflow-hidden shadow-lg border-2 border-gray-300">
               <img 
                 src="/scorecard-example.jpg" 
                 alt="Golf scorecard example" 
@@ -127,8 +127,8 @@ export default function ScorecardUpload({ onAnalysisComplete }: ScorecardUploadP
               </div>
               <div className="flex justify-center">
                 <div className="relative">
-                  <div className="animate-spin rounded-full h-10 w-10 border-4 border-gray-200"></div>
-                  <div className="animate-spin rounded-full h-10 w-10 border-4 border-transparent border-t-black absolute top-0 left-0"></div>
+                  <div className="animate-spin h-10 w-10 border-4 border-gray-200"></div>
+                  <div className="animate-spin h-10 w-10 border-4 border-transparent border-t-black absolute top-0 left-0"></div>
                 </div>
               </div>
             </div>
@@ -150,7 +150,7 @@ export default function ScorecardUpload({ onAnalysisComplete }: ScorecardUploadP
                   className="hidden"
                   disabled={isUploading}
                 />
-                <span className="inline-flex items-center px-6 py-3 text-sm font-semibold rounded-xl text-white bg-black hover:bg-gray-800 cursor-pointer shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105">
+                <span className="inline-flex items-center px-6 py-3 text-sm font-semibold text-white bg-black hover:bg-gray-800 cursor-pointer shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105">
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
@@ -163,7 +163,7 @@ export default function ScorecardUpload({ onAnalysisComplete }: ScorecardUploadP
       </div>
 
       {error && (
-        <div className="mt-4 p-4 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-2xl shadow-sm">
+        <div className="mt-4 p-4 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 shadow-sm">
           <div className="flex items-center">
             <svg className="w-5 h-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />

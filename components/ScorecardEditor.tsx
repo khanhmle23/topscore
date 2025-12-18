@@ -167,7 +167,7 @@ function ScorecardEditor({
   return (
     <div className="space-y-6">
       {/* Course Info */}
-      <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 p-6">
+      <div className="bg-white/70 backdrop-blur-sm shadow-lg border border-gray-100 p-6">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div className="flex-1">
             <input
@@ -187,7 +187,7 @@ function ScorecardEditor({
           <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={exportToCSV}
-              className="flex items-center justify-center px-5 py-2.5 bg-black hover:bg-gray-800 text-white rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="flex items-center justify-center px-5 py-2.5 bg-black hover:bg-gray-800 text-white transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
             >
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -197,7 +197,7 @@ function ScorecardEditor({
             {onAddPlayers && (
               <button
                 onClick={onAddPlayers}
-                className="flex items-center justify-center px-5 py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="flex items-center justify-center px-5 py-2.5 bg-gray-800 hover:bg-gray-700 text-white transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
               >
                 <svg
                   className="w-5 h-5 mr-2"
@@ -220,7 +220,7 @@ function ScorecardEditor({
       </div>
 
       {/* Scorecard Table */}
-      <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+      <div className="bg-white/70 backdrop-blur-sm shadow-lg border border-gray-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
@@ -413,12 +413,12 @@ function ScorecardEditor({
       {/* Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {derived.players.map((player) => (
-          <div key={player.name} className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-shadow duration-200">
+          <div key={player.name} className="bg-white/70 backdrop-blur-sm shadow-lg border border-gray-100 p-6 hover:shadow-xl transition-shadow duration-200">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-3 border-b border-gray-200">
               {player.name}
             </h3>
             <div className="space-y-2.5 text-sm">
-              <div className="flex justify-between items-center p-2 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50">
+              <div className="flex justify-between items-center p-2 bg-gray-50">
                 <span className="text-gray-700 font-medium">Score:</span>
                 <span className="font-bold text-gray-900">
                   {player.totalScore} ({player.scoreToPar >= 0 ? '+' : ''}
@@ -426,31 +426,31 @@ function ScorecardEditor({
                 </span>
               </div>
               {player.eagles > 0 && (
-                <div className="flex justify-between items-center p-2 rounded-lg hover:bg-purple-50 transition-colors">
+                <div className="flex justify-between items-center p-2 hover:bg-gray-100 transition-colors">
                   <span className="text-gray-600">Eagles:</span>
                   <span className="font-semibold text-purple-600">{player.eagles}</span>
                 </div>
               )}
-              <div className="flex justify-between items-center p-2 rounded-lg hover:bg-blue-50 transition-colors">
+              <div className="flex justify-between items-center p-2 hover:bg-gray-100 transition-colors">
                 <span className="text-gray-600">Birdies:</span>
                 <span className="font-semibold text-blue-600">{player.birdies}</span>
               </div>
-              <div className="flex justify-between items-center p-2 rounded-lg hover:bg-gray-50 transition-colors">
+              <div className="flex justify-between items-center p-2 hover:bg-gray-100 transition-colors">
                 <span className="text-gray-600">Pars:</span>
                 <span className="font-semibold text-gray-700">{player.pars}</span>
               </div>
-              <div className="flex justify-between items-center p-2 rounded-lg hover:bg-orange-50 transition-colors">
+              <div className="flex justify-between items-center p-2 hover:bg-gray-100 transition-colors">
                 <span className="text-gray-600">Bogeys:</span>
                 <span className="font-semibold text-orange-600">{player.bogeys}</span>
               </div>
               {player.doubleBogeys > 0 && (
-                <div className="flex justify-between items-center p-2 rounded-lg hover:bg-red-50 transition-colors">
+                <div className="flex justify-between items-center p-2 hover:bg-gray-100 transition-colors">
                   <span className="text-gray-600">Double Bogeys:</span>
                   <span className="font-semibold text-red-600">{player.doubleBogeys}</span>
                 </div>
               )}
               {player.tripleBogeyPlus > 0 && (
-                <div className="flex justify-between items-center p-2 rounded-lg hover:bg-red-50 transition-colors">
+                <div className="flex justify-between items-center p-2 hover:bg-gray-100 transition-colors">
                   <span className="text-gray-600">Triple+:</span>
                   <span className="font-semibold text-red-800">{player.tripleBogeyPlus}</span>
                 </div>

@@ -100,7 +100,7 @@ export default function AdditionalPlayersUpload({
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-200">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200">
+      <div className="bg-white shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200">
         {/* Header */}
         <div className="border-b border-gray-200 px-6 py-5 bg-gradient-to-r from-blue-50 to-indigo-50">
           <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
@@ -114,9 +114,9 @@ export default function AdditionalPlayersUpload({
         {/* Content */}
         <div className="px-6 py-6">
           {!selectedFile ? (
-            <div className="border-2 border-dashed border-gray-300 rounded-2xl p-12 hover:border-blue-400 hover:bg-gradient-to-br hover:from-blue-50 hover:to-indigo-50 transition-all duration-200">
+            <div className="border-2 border-dashed border-gray-300 p-12 hover:border-gray-700 hover:bg-gray-50 transition-all duration-200">
               <div className="text-center">
-                <div className="mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center mb-4 shadow-lg">
+                <div className="mx-auto w-16 h-16 bg-black flex items-center justify-center mb-4 shadow-lg">
                   <svg
                     className="h-8 w-8 text-white"
                     stroke="currentColor"
@@ -135,7 +135,7 @@ export default function AdditionalPlayersUpload({
                 <div className="mt-4">
                   <label
                     htmlFor="additional-file-upload"
-                    className="cursor-pointer inline-flex items-center px-6 py-3 text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                    className="cursor-pointer inline-flex items-center px-6 py-3 text-sm font-semibold text-white bg-black hover:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
                   >
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -163,11 +163,11 @@ export default function AdditionalPlayersUpload({
                 <img
                   src={previewUrl!}
                   alt="Scorecard preview"
-                  className="w-full h-64 object-contain bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl shadow-lg"
+                  className="w-full h-64 object-contain bg-gray-50 shadow-lg"
                 />
                 <button
                   onClick={handleRemoveFile}
-                  className="absolute top-3 right-3 bg-red-500 text-white rounded-xl p-2.5 hover:bg-red-600 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-200 transform hover:scale-110"
+                  className="absolute top-3 right-3 bg-red-500 text-white p-2.5 hover:bg-red-600 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-200 transform hover:scale-110"
                   disabled={isUploading}
                 >
                   <svg
@@ -187,7 +187,7 @@ export default function AdditionalPlayersUpload({
               </div>
 
               {/* File info */}
-              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border border-blue-100">
+              <div className="bg-gray-50 p-4 border border-gray-200">
                 <p className="text-sm font-semibold text-gray-900">
                   {selectedFile.name}
                 </p>
@@ -200,7 +200,7 @@ export default function AdditionalPlayersUpload({
 
           {/* Error message */}
           {error && (
-            <div className="mt-4 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-2xl p-4 shadow-sm">
+            <div className="mt-4 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 p-4 shadow-sm">
               <div className="flex">
                 <div className="flex-shrink-0">
                   <svg
@@ -223,7 +223,7 @@ export default function AdditionalPlayersUpload({
           )}
 
           {/* Info box */}
-          <div className="mt-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-4 shadow-sm">
+          <div className="mt-4 bg-gray-50 border border-gray-200 p-4 shadow-sm">
             <div className="flex">
               <div className="flex-shrink-0">
                 <svg
@@ -252,7 +252,7 @@ export default function AdditionalPlayersUpload({
         <div className="border-t border-gray-200 px-6 py-4 flex justify-end space-x-3 bg-gray-50">
           <button
             onClick={onCancel}
-            className="px-5 py-2.5 border border-gray-300 rounded-xl text-sm font-semibold text-gray-700 hover:bg-white hover:shadow-sm transition-all duration-200"
+            className="px-5 py-2.5 border border-gray-300 text-sm font-semibold text-gray-700 hover:bg-white hover:shadow-sm transition-all duration-200"
             disabled={isUploading}
           >
             Cancel
@@ -260,7 +260,7 @@ export default function AdditionalPlayersUpload({
           <button
             onClick={handleUpload}
             disabled={!selectedFile || isUploading}
-            className="px-5 py-2.5 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-gray-300 disabled:to-gray-300 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-lg"
+            className="px-5 py-2.5 border border-transparent shadow-sm text-sm font-semibold text-white bg-black hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-lg"
           >
             {isUploading ? (
               <span className="flex items-center">
