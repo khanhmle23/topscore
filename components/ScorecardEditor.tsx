@@ -174,7 +174,7 @@ function ScorecardEditor({
               type="text"
               value={scorecard.courseName}
               onChange={(e) => handleCourseNameChange(e.target.value)}
-              className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2 border-b-2 border-transparent hover:border-blue-300 focus:border-blue-500 focus:outline-none transition-colors w-full"
+              className="text-2xl font-bold text-black mb-2 border-b-2 border-transparent hover:border-gray-400 focus:border-black focus:outline-none transition-colors w-full"
               placeholder="Course Name"
             />
             {scorecard.teeName && (
@@ -187,7 +187,7 @@ function ScorecardEditor({
           <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={exportToCSV}
-              className="flex items-center justify-center px-5 py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="flex items-center justify-center px-5 py-2.5 bg-black hover:bg-gray-800 text-white rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
             >
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -197,7 +197,7 @@ function ScorecardEditor({
             {onAddPlayers && (
               <button
                 onClick={onAddPlayers}
-                className="flex items-center justify-center px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="flex items-center justify-center px-5 py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
               >
                 <svg
                   className="w-5 h-5 mr-2"

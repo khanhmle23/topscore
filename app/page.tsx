@@ -110,12 +110,12 @@ export default function Home() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <img 
-                src="/icon-192.png" 
+                src="/Topscore_Logo-192.png" 
                 alt="TopScore Logo" 
                 className="w-12 h-12 rounded-xl shadow-md"
               />
               <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                <h1 className="text-3xl font-bold text-black">
                   TopScore Golf Scorecard Extractor
                 </h1>
                 <p className="mt-1 text-sm text-gray-600">
@@ -126,7 +126,7 @@ export default function Home() {
             {scorecard && (
               <button
                 onClick={handleReset}
-                className="px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-xl transition-all duration-200 font-medium shadow-sm border border-gray-200 hover:shadow-md"
+                className="px-4 py-2 bg-black hover:bg-gray-800 text-white rounded-xl transition-all duration-200 font-medium shadow-sm hover:shadow-md"
               >
                 New Scorecard
               </button>
@@ -149,7 +149,7 @@ export default function Home() {
               </h2>
               <div className="space-y-3 text-sm text-gray-600">
                 <div className="flex items-start group">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white flex items-center justify-center font-semibold mr-3 shadow-sm group-hover:shadow-md transition-shadow">
+                  <span className="flex-shrink-0 w-8 h-8 rounded-xl bg-black text-white flex items-center justify-center font-semibold mr-3 shadow-sm group-hover:shadow-md transition-shadow">
                     1
                   </span>
                   <p className="pt-1">
@@ -158,7 +158,7 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="flex items-start group">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-600 text-white flex items-center justify-center font-semibold mr-3 shadow-sm group-hover:shadow-md transition-shadow">
+                  <span className="flex-shrink-0 w-8 h-8 rounded-xl bg-gray-800 text-white flex items-center justify-center font-semibold mr-3 shadow-sm group-hover:shadow-md transition-shadow">
                     2
                   </span>
                   <p className="pt-1">
@@ -167,7 +167,7 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="flex items-start group">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 text-white flex items-center justify-center font-semibold mr-3 shadow-sm group-hover:shadow-md transition-shadow">
+                  <span className="flex-shrink-0 w-8 h-8 rounded-xl bg-gray-700 text-white flex items-center justify-center font-semibold mr-3 shadow-sm group-hover:shadow-md transition-shadow">
                     3
                   </span>
                   <p className="pt-1">
@@ -176,7 +176,7 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="flex items-start group">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-xl bg-gradient-to-br from-pink-500 to-pink-600 text-white flex items-center justify-center font-semibold mr-3 shadow-sm group-hover:shadow-md transition-shadow">
+                  <span className="flex-shrink-0 w-8 h-8 rounded-xl bg-gray-600 text-white flex items-center justify-center font-semibold mr-3 shadow-sm group-hover:shadow-md transition-shadow">
                     4
                   </span>
                   <p className="pt-1">
@@ -185,7 +185,7 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="flex items-start group">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-xl bg-gradient-to-br from-rose-500 to-rose-600 text-white flex items-center justify-center font-semibold mr-3 shadow-sm group-hover:shadow-md transition-shadow">
+                  <span className="flex-shrink-0 w-8 h-8 rounded-xl bg-gray-500 text-white flex items-center justify-center font-semibold mr-3 shadow-sm group-hover:shadow-md transition-shadow">
                     5
                   </span>
                   <p className="pt-1">
