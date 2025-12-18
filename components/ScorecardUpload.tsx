@@ -96,7 +96,7 @@ export default function ScorecardUpload({ onAnalysisComplete }: ScorecardUploadP
   return (
     <div className="w-full">
       <div
-        className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-200 ${
+        className={`relative border-2 border-dashed rounded-2xl p-6 sm:p-8 text-center transition-all duration-200 ${
           dragActive
             ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-indigo-50 shadow-lg scale-105'
             : 'border-gray-300 bg-white/50 backdrop-blur-sm hover:border-blue-400 hover:shadow-md'
@@ -106,9 +106,9 @@ export default function ScorecardUpload({ onAnalysisComplete }: ScorecardUploadP
         onDragOver={handleDrag}
         onDrop={handleDrop}
       >
-        <div className="space-y-6">
+        <div className="space-y-4">
           <div className="flex justify-center">
-            <div className="w-32 h-32 rounded-2xl overflow-hidden shadow-lg border-2 border-blue-200">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden shadow-lg border-2 border-blue-200">
               <img 
                 src="/scorecard-example.jpg" 
                 alt="Golf scorecard example" 
@@ -118,8 +118,8 @@ export default function ScorecardUpload({ onAnalysisComplete }: ScorecardUploadP
           </div>
           
           {isUploading ? (
-            <div className="space-y-4">
-              <div className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            <div className="space-y-3">
+              <div className="text-lg sm:text-xl font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 Analyzing your scorecard...
               </div>
               <div className="text-sm text-gray-600">
@@ -127,15 +127,15 @@ export default function ScorecardUpload({ onAnalysisComplete }: ScorecardUploadP
               </div>
               <div className="flex justify-center">
                 <div className="relative">
-                  <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-200"></div>
-                  <div className="animate-spin rounded-full h-12 w-12 border-4 border-transparent border-t-blue-600 absolute top-0 left-0"></div>
+                  <div className="animate-spin rounded-full h-10 w-10 border-4 border-blue-200"></div>
+                  <div className="animate-spin rounded-full h-10 w-10 border-4 border-transparent border-t-blue-600 absolute top-0 left-0"></div>
                 </div>
               </div>
             </div>
           ) : (
             <>
-              <div className="space-y-2">
-                <div className="text-xl font-semibold text-gray-900">
+              <div className="space-y-1">
+                <div className="text-lg sm:text-xl font-semibold text-gray-900">
                   Upload Golf Scorecard
                 </div>
                 <div className="text-sm text-gray-600">
