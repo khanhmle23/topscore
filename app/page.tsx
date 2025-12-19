@@ -180,8 +180,8 @@ export default function Home() {
                     4
                   </span>
                   <p className="pt-1">
-                    <strong className="text-gray-900">Export your data</strong> - 
-                    Download your scorecard data as CSV for easy sharing and record keeping
+                    <strong className="text-gray-900">Add more players</strong> - 
+                    Upload additional scorecards from the same course to add more players
                   </p>
                 </div>
                 <div className="flex items-start group">
@@ -189,8 +189,8 @@ export default function Home() {
                     5
                   </span>
                   <p className="pt-1">
-                    <strong className="text-gray-900">Add more players</strong> - 
-                    Upload additional scorecards from the same course to add more players
+                    <strong className="text-gray-900">Export your data</strong> - 
+                    Download your scorecard data as CSV for easy sharing and record keeping
                   </p>
                 </div>
               </div>
